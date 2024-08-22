@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header, .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .footer {
+            margin-top: auto;
+        }
+        .container {
+            flex: 1;
+            margin-top: 20px;
+        }
+        .table thead th {
+            background-color: #495057;
+            color: white;
+        }
+        .table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .logout-link {
+            float: right;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="mb-0">Smart Exit Management - Admin Dashboard</h1>
+            {% if session['username'] %}
+            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 class="mt-4">User Management</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-4">Ticket Management</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ticket Number</th>
+                    <th>Device ID</th>
+                    <th>Vehicle Type</th>
+                    <th>Timestamp</th>
+                    <th>Exit Timestamp</th>
+                    <th>Amount Paid</th>
+                    <th>Cashier Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.ticket_number }}</td>
+                    <td>{{ ticket.device_id }}</td>
+                    <td>{{ ticket.vehicle_type }}</td>
+                    <td>{{ ticket.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        {% if ticket.exit_timestamp %}
+                            {{ ticket.exit_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ ticket.amount_paid }}</td>
+                    <td>{{ ticket.cashier_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-4">Cashier-wise Collection Report</h2>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#today" data-bs-toggle="tab">Today</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#last_day" data-bs-toggle="tab">Last Day</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#last_7_days" data-bs-toggle="tab">Last 7 Days</a>
+            </li>
+        </ul>
+        <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="today">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cashier Name</th>
+                            <th>Total Amount Collected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cashier in cashier_reports_today %}
+                        <tr>
+                            <td>{{ cashier.cashier_name }}</td>
+                            <td>₹{{ cashier.total_amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="last_day">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cashier Name</th>
+                            <th>Total Amount Collected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cashier in cashier_reports_last_day %}
+                        <tr>
+                            <td>{{ cashier.cashier_name }}</td>
+                            <td>₹{{ cashier.total_amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="last_7_days">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Cashier Name</th>
+                            <th>Total Amount Collected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in cashier_reports_last_7_days %}
+                        <tr>
+                            <td>{{ report.date }}</td>
+                            <td>{{ report.cashier_name }}</td>
+                            <td>₹{{ report.total_amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Powered by Nexoplus | Mob: 9843476222 | Email: <a href="mailto:hello@nexoplus.in" class="text-white text-decoration-underline">hello@nexoplus.in</a> | Website: <a href="http://www.nexoplus.in" class="text-white text-decoration-underline" target="_blank">www.nexoplus.in</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

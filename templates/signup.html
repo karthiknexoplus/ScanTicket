@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Smart Exit Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header, footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .signup-form {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .signup-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .signup-form label {
+            font-weight: bold;
+        }
+        .signup-form .form-control,
+        .signup-form .form-select {
+            margin-bottom: 15px;
+        }
+        .signup-form .btn {
+            width: 100%;
+        }
+        .footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Smart Exit Management</h1>
+    </header>
+
+    <div class="container">
+        <div class="signup-form">
+            <h2>Sign Up</h2>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select id="role" class="form-select" name="role" required>
+                        <option value="admin">Admin</option>
+                        <option value="cashier">Cashier</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+            <p class="mt-3">Already have an account? <a href="{{ url_for('login') }}" class="link-primary">Login here</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Powered by Nexoplus | Contact: 9843476222 | Email: hello@nexoplus.in | Website: <a href="http://www.nexoplus.in" class="text-white text-decoration-underline" target="_blank">www.nexoplus.in</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

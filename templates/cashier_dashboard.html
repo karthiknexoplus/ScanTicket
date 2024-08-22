@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header, .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .footer {
+            margin-top: auto;
+        }
+        .container {
+            flex: 1;
+            margin-top: 20px;
+        }
+        .logout-link {
+            float: right;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .ticket-details {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="mb-0">Smart Exit Management - Cashier Dashboard</h1>
+        {% if session['username'] %}
+        <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+        {% endif %}
+    </header>
+
+    <div class="container">
+        <h2 class="mt-4">Enter Ticket Number</h2>
+        <form action="{{ url_for('cashier_dashboard') }}" method="POST">
+            <div class="mb-3">
+                <label for="ticket_number" class="form-label">Ticket Number</label>
+                <input type="text" class="form-control" id="ticket_number" name="ticket_number" required autofocus>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="ticket-details" class="ticket-details mt-4">
+            <h3>Ticket Details</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Ticket Number:</strong> {{ ticket.ticket_number }}</li>
+                <li class="list-group-item"><strong>Entry Timestamp:</strong> {{ ticket.timestamp }}</li>
+                <li class="list-group-item"><strong>Exit Timestamp:</strong> {{ ticket.exit_timestamp or 'N/A' }}</li>
+                <li class="list-group-item"><strong>Amount to be Paid:</strong> ₹{{ ticket.amount_to_be_paid }}</li>
+            </ul>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <p>Powered by Nexoplus | Mob: 9843476222 | Email: <a href="mailto:hello@nexoplus.in" class="text-white text-decoration-underline">hello@nexoplus.in</a> | Website: <a href="http://www.nexoplus.in" class="text-white text-decoration-underline" target="_blank">www.nexoplus.in</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Focus on the ticket number input field by default
+            document.getElementById('ticket_number').focus();
+            
+            // Show ticket details and then hide them after 5 seconds
+            const ticketDetails = document.getElementById('ticket-details');
+            if (ticketDetails) {
+                ticketDetails.style.display = 'block';
+                setTimeout(() => {
+                    ticketDetails.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
