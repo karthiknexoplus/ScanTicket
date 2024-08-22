@@ -123,6 +123,7 @@
                             <th>Cashier Name</th>
                             <th>Total Tickets Exited</th>
                             <th>Total Amount Collected</th>
+                            <th>Tickets with Zero Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,6 +132,7 @@
                             <td>{{ cashier.cashier_name }}</td>
                             <td>{{ cashier.total_tickets }}</td>
                             <td>₹{{ cashier.total_amount }}</td>
+                            <td>{{ cashier.tickets_with_zero_amount }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -143,6 +145,7 @@
                             <th>Cashier Name</th>
                             <th>Total Tickets Exited</th>
                             <th>Total Amount Collected</th>
+                            <th>Tickets with Zero Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,6 +154,7 @@
                             <td>{{ cashier.cashier_name }}</td>
                             <td>{{ cashier.total_tickets }}</td>
                             <td>₹{{ cashier.total_amount }}</td>
+                            <td>{{ cashier.tickets_with_zero_amount }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -164,6 +168,7 @@
                             <th>Cashier Name</th>
                             <th>Total Tickets Exited</th>
                             <th>Total Amount Collected</th>
+                            <th>Tickets with Zero Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -173,6 +178,7 @@
                             <td>{{ report.cashier_name }}</td>
                             <td>{{ report.total_tickets }}</td>
                             <td>₹{{ report.total_amount }}</td>
+                            <td>{{ report.tickets_with_zero_amount }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -182,7 +188,7 @@
     </div>
 
     <footer class="footer">
-        <p>Powered by Nexoplus | Mob: 9843476222 | Email: <a href="mailto:hello@nexoplus.in" class="text-white text-decoration-underline">hello@nexoplus.in</a> | Website: <a href="http://www.nexoplus.in" class="text-white text-decoration-underline">www.nexoplus.in</a></p>
+        <p>&copy; {{ current_year }} Nexoplus Innovations Pvt Ltd | <a href="mailto:hello@nexoplus.in" class="text-white">hello@nexoplus.in</a> | <a href="tel:+919843476222" class="text-white">9843476222</a> | <a href="http://www.nexoplus.in" class="text-white text-decoration-underline">www.nexoplus.in</a></p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

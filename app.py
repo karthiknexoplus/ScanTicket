@@ -103,13 +103,15 @@ def admin_dashboard():
     cashier_reports_today = db.session.query(
         Ticket.cashier_name,
         func.count(Ticket.id).label('total_tickets'),
-        func.sum(Ticket.amount_paid).label('total_amount')
+        func.sum(Ticket.amount_paid).label('total_amount'),
+        func.count().filter(Ticket.amount_paid == 0).label('tickets_with_zero_amount')
     ).filter(func.date(Ticket.timestamp) == today).group_by(Ticket.cashier_name).all()
 
     cashier_reports_last_day = db.session.query(
         Ticket.cashier_name,
         func.count(Ticket.id).label('total_tickets'),
-        func.sum(Ticket.amount_paid).label('total_amount')
+        func.sum(Ticket.amount_paid).label('total_amount'),
+        func.count().filter(Ticket.amount_paid == 0).label('tickets_with_zero_amount')
     ).filter(func.date(Ticket.timestamp) == last_day).group_by(Ticket.cashier_name).all()
 
     cashier_reports_last_7_days = []
@@ -117,14 +119,16 @@ def admin_dashboard():
         daily_reports = db.session.query(
             Ticket.cashier_name,
             func.count(Ticket.id).label('total_tickets'),
-            func.sum(Ticket.amount_paid).label('total_amount')
+            func.sum(Ticket.amount_paid).label('total_amount'),
+            func.count().filter(Ticket.amount_paid == 0).label('tickets_with_zero_amount')
         ).filter(func.date(Ticket.timestamp) == date).group_by(Ticket.cashier_name).all()
         for report in daily_reports:
             cashier_reports_last_7_days.append({
                 'date': date.strftime('%A, %Y-%m-%d'),
                 'cashier_name': report.cashier_name,
                 'total_tickets': report.total_tickets,
-                'total_amount': report.total_amount
+                'total_amount': report.total_amount,
+                'tickets_with_zero_amount': report.tickets_with_zero_amount
             })
 
     return render_template('admin_dashboard.html', users=users, tickets=tickets,
@@ -132,6 +136,7 @@ def admin_dashboard():
                            cashier_reports_today=cashier_reports_today,
                            cashier_reports_last_day=cashier_reports_last_day,
                            cashier_reports_last_7_days=cashier_reports_last_7_days)
+
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 @app.route('/cashier-dashboard', methods=['GET', 'POST'])
@@ -194,14 +199,14 @@ def get_ticket_info(ticket_number=None):
         response = requests.post(url, json=data)
         if response.status_code == 200:
             ticket = response.json()
-            print_receipt(ticket)
+            # print_receipt(ticket)
             print('Ticket retrieved:', ticket)  
             return ticket, 200
         else:
             return jsonify({'error': 'Failed to fetch ticket info'}), 500
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
-import win32print
+# import win32print
 import datetime
 def print_receipt(ticket):
     print(f"Printing receipt for ticket number: {ticket['ticket_number']}")
