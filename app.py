@@ -199,14 +199,14 @@ def get_ticket_info(ticket_number=None):
         response = requests.post(url, json=data)
         if response.status_code == 200:
             ticket = response.json()
-            # print_receipt(ticket)
+            print_receipt(ticket)
             print('Ticket retrieved:', ticket)  
             return ticket, 200
         else:
             return jsonify({'error': 'Failed to fetch ticket info'}), 500
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
-# import win32print
+import win32print
 import datetime
 def print_receipt(ticket):
     print(f"Printing receipt for ticket number: {ticket['ticket_number']}")
