@@ -2,11 +2,11 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import pytz
-from datetime import datetime
 import requests
 import jsonify
 from datetime import datetime, timedelta
 from sqlalchemy import func
+from flask import Flask
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///parking.db'
@@ -77,49 +77,62 @@ def signup():
         flash('User created successfully', 'success')
         return redirect(url_for('login'))
     return render_template('signup.html')
-from datetime import datetime, timedelta
-from datetime import datetime, timedelta
 from sqlalchemy import func
 @app.route('/admin')
 def admin_dashboard():
+    test_datetime()
     if session.get('role') != 'admin':
         flash('Access denied', 'danger')
         return redirect(url_for('login'))
+    
     users = User.query.all()
     tickets = Ticket.query.all()
+
+    # Summary for all users
     user_summaries = db.session.query(
         User.username,
         func.count(Ticket.id).label('total_tickets'),
         func.sum(Ticket.amount_paid).label('total_amount')
     ).join(Ticket, User.id == Ticket.cashier_name, isouter=True).group_by(User.id).all()
-    today = datetime.now().date()
+
+    # Reports for cashier-wise collection
+    today = datetime.datetime.now().date()
     last_day = today - timedelta(days=1)
     last_7_days = [today - timedelta(days=i) for i in range(7)]
+
     cashier_reports_today = db.session.query(
         Ticket.cashier_name,
+        func.count(Ticket.id).label('total_tickets'),
         func.sum(Ticket.amount_paid).label('total_amount')
     ).filter(func.date(Ticket.timestamp) == today).group_by(Ticket.cashier_name).all()
+
     cashier_reports_last_day = db.session.query(
         Ticket.cashier_name,
+        func.count(Ticket.id).label('total_tickets'),
         func.sum(Ticket.amount_paid).label('total_amount')
     ).filter(func.date(Ticket.timestamp) == last_day).group_by(Ticket.cashier_name).all()
+
     cashier_reports_last_7_days = []
     for date in last_7_days:
         daily_reports = db.session.query(
             Ticket.cashier_name,
+            func.count(Ticket.id).label('total_tickets'),
             func.sum(Ticket.amount_paid).label('total_amount')
         ).filter(func.date(Ticket.timestamp) == date).group_by(Ticket.cashier_name).all()
         for report in daily_reports:
             cashier_reports_last_7_days.append({
                 'date': date.strftime('%A, %Y-%m-%d'),
                 'cashier_name': report.cashier_name,
+                'total_tickets': report.total_tickets,
                 'total_amount': report.total_amount
             })
+
     return render_template('admin_dashboard.html', users=users, tickets=tickets,
                            user_summaries=user_summaries,
                            cashier_reports_today=cashier_reports_today,
                            cashier_reports_last_day=cashier_reports_last_day,
                            cashier_reports_last_7_days=cashier_reports_last_7_days)
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 @app.route('/cashier-dashboard', methods=['GET', 'POST'])
 def cashier_dashboard():
@@ -145,8 +158,8 @@ def store_ticket_info(ticket_data, cashier_name):
     exit_timestamp_str = ticket_data.get('exit_timestamp')
     timestamp_str = ticket_data.get('timestamp')
     try:
-        exit_timestamp = datetime.strptime(exit_timestamp_str, '%Y-%m-%d %H:%M:%S')
-        timestamp = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
+        exit_timestamp = datetime.datetime.strptime(exit_timestamp_str, '%Y-%m-%d %H:%M:%S')
+        timestamp = datetime.datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
     except ValueError as e:
         print(f'Error parsing date: {e}')
         return
@@ -233,7 +246,23 @@ def print_receipt(ticket):
     finally:
         win32print.EndDocPrinter(printer_handle)
         win32print.ClosePrinter(printer_handle)
+
+def test_datetime():
+    try:
+        now = datetime.now()
+        print(f"Current datetime: {now}")
+        yesterday = now - timedelta(days=1)
+        print(f"Yesterday: {yesterday}")
+    except AttributeError as e:
+        print(f"Error: {e}")
+
+test_datetime()
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         app.run(host='0.0.0.0', port=8080)
+
+
+
+

@@ -78,8 +78,6 @@
             <thead>
                 <tr>
                     <th>Ticket Number</th>
-                    <th>Device ID</th>
-                    <th>Vehicle Type</th>
                     <th>Timestamp</th>
                     <th>Exit Timestamp</th>
                     <th>Amount Paid</th>
@@ -90,8 +88,6 @@
                 {% for ticket in tickets %}
                 <tr>
                     <td>{{ ticket.ticket_number }}</td>
-                    <td>{{ ticket.device_id }}</td>
-                    <td>{{ ticket.vehicle_type }}</td>
                     <td>{{ ticket.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                     <td>
                         {% if ticket.exit_timestamp %}
@@ -125,6 +121,7 @@
                     <thead>
                         <tr>
                             <th>Cashier Name</th>
+                            <th>Total Tickets Exited</th>
                             <th>Total Amount Collected</th>
                         </tr>
                     </thead>
@@ -132,6 +129,7 @@
                         {% for cashier in cashier_reports_today %}
                         <tr>
                             <td>{{ cashier.cashier_name }}</td>
+                            <td>{{ cashier.total_tickets }}</td>
                             <td>₹{{ cashier.total_amount }}</td>
                         </tr>
                         {% endfor %}
@@ -143,6 +141,7 @@
                     <thead>
                         <tr>
                             <th>Cashier Name</th>
+                            <th>Total Tickets Exited</th>
                             <th>Total Amount Collected</th>
                         </tr>
                     </thead>
@@ -150,6 +149,7 @@
                         {% for cashier in cashier_reports_last_day %}
                         <tr>
                             <td>{{ cashier.cashier_name }}</td>
+                            <td>{{ cashier.total_tickets }}</td>
                             <td>₹{{ cashier.total_amount }}</td>
                         </tr>
                         {% endfor %}
@@ -162,6 +162,7 @@
                         <tr>
                             <th>Date</th>
                             <th>Cashier Name</th>
+                            <th>Total Tickets Exited</th>
                             <th>Total Amount Collected</th>
                         </tr>
                     </thead>
@@ -170,6 +171,7 @@
                         <tr>
                             <td>{{ report.date }}</td>
                             <td>{{ report.cashier_name }}</td>
+                            <td>{{ report.total_tickets }}</td>
                             <td>₹{{ report.total_amount }}</td>
                         </tr>
                         {% endfor %}
@@ -180,7 +182,7 @@
     </div>
 
     <footer class="footer">
-        <p>Powered by Nexoplus | Mob: 9843476222 | Email: <a href="mailto:hello@nexoplus.in" class="text-white text-decoration-underline">hello@nexoplus.in</a> | Website: <a href="http://www.nexoplus.in" class="text-white text-decoration-underline" target="_blank">www.nexoplus.in</a></p>
+        <p>Powered by Nexoplus | Mob: 9843476222 | Email: <a href="mailto:hello@nexoplus.in" class="text-white text-decoration-underline">hello@nexoplus.in</a> | Website: <a href="http://www.nexoplus.in" class="text-white text-decoration-underline">www.nexoplus.in</a></p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
